@@ -8,7 +8,7 @@ from models import Asset, Edge   # full models — your data already includes _i
 load_dotenv()
 
 client = AsyncIOMotorClient(os.getenv("MONGO_URI"))
-db = client["lineage_db"]
+db = client["Data_lineage"]
 
 
 async def load_assets(path="data/assets.json"):
