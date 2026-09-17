@@ -1,6 +1,8 @@
-from fastapi import Request, Query
+from fastapi import Request, Query, HTTPException
 from typing import Optional
-from backend.models import Asset, AssetType, Environment, Criticality
+from backend.models import Asset, AssetType, Environment, Criticality, AssetCreate
+from datetime import datetime
+import uuid
 
 def get_assets(
     request:Request,
@@ -30,3 +32,46 @@ def get_assets(
 
     cursor = assets_collection.find(query)
     return [Asset(**doc) for doc in cursor]
+
+def get_asset_by_id(request: Request, asset_id: str):
+    """
+    gets the asset by given id in params
+    """
+    client = request.app.state.mongo_client
+    assets_collection = client["Data_lineage"]["assets"]
+
+    doc = assets_collection.find_one({"_id": asset_id})
+    if not doc:
+        raise HTTPException(status_code=404, detail="Asset not found")
+
+    return Asset(**doc)
+
+def create_asset(request: Request, asset: AssetCreate):
+    """
+    create an asset by giving info
+    """
+    client = request.app.state.mongo_client
+    assets_collection = client["Data_lineage"]["assets"]
+
+    # imposing name + type + environment + owner  uniqueness in data
+    duplicate = assets_collection.find_one({
+        "name": asset.name,
+        "type": asset.type.value,
+        "environment": asset.environment.value,
+        "owner": asset.owner
+    })
+    if duplicate:
+        raise HTTPException(
+            status_code=409,
+            detail="Asset with this name, type, environment, and owner already exists"
+        )
+    # {type}_{random} (report_ce2a663d), while your seed data uses {domain}_{type}_{number} (cust_rpt_001). Two different naming schemes.
+    asset_id = f"{asset.type.value.lower()}_{uuid.uuid4().hex[:8]}"
+    now = datetime.now()
+    doc = asset.model_dump()
+    doc["_id"] = asset_id
+    doc["created_at"] = now
+    doc["last_scanned"] = now
+
+    assets_collection.insert_one(doc)
+    return Asset(**doc)
