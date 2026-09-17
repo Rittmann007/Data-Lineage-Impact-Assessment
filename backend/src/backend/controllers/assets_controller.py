@@ -75,3 +75,22 @@ def create_asset(request: Request, asset: AssetCreate):
 
     assets_collection.insert_one(doc)
     return Asset(**doc)
+
+def delete_asset(request: Request, asset_id: str):
+    """
+    delete an asset by id and any edges referencing it (as source or target) will be
+    also deleted
+    """
+    client = request.app.state.mongo_client
+    assets_collection = client["Data_lineage"]["assets"]
+    edges_collection = client["Data_lineage"]["edges"]
+
+    result = assets_collection.delete_one({"_id": asset_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Asset not found")
+
+    edges_collection.delete_many({# cascade delete related assets
+        "$or": [{"source": asset_id}, {"target": asset_id}]
+    })
+
+    return {"detail": f"Asset '{asset_id}' and its edges deleted"}
