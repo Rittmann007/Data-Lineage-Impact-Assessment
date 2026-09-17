@@ -5,6 +5,7 @@ from fastapi import FastAPI
 from pymongo import MongoClient
 from pymongo.server_api import ServerApi
 import os
+from backend.controllers.assets_controller import get_assets
 
 
 uri = os.environ.get("MONGO_URI")
@@ -29,3 +30,6 @@ app = FastAPI(lifespan=lifespan)
 @app.get("/")
 async def root():
     return {"message": "Hello World"}
+
+# assets
+app.get("/assets")(get_assets)
