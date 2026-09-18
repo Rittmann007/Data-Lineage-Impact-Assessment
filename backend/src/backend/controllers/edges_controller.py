@@ -1,6 +1,6 @@
 from fastapi import Request, Query, HTTPException
 from typing import Optional
-from backend.models import Edge, EdgeCreate, RelationshipType, Confidence
+from backend.models import Edge, EdgeCreate
 import uuid
 
 def get_edges(
