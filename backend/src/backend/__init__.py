@@ -6,7 +6,6 @@ from pymongo import MongoClient
 from pymongo.server_api import ServerApi
 import os
 from backend.controllers.assets_controller import get_assets,get_asset_by_id,create_asset,delete_asset
-from backend.controllers.edges_controller import get_edges, get_edge_by_id, create_edge, delete_edge
 
 
 uri = os.environ.get("MONGO_URI")
@@ -40,12 +39,3 @@ app.get("/assets/{asset_id}")(get_asset_by_id)
 app.post("/asset_create")(create_asset)
 
 app.delete("/assets/{asset_id}")(delete_asset)
-
-# edges
-
-app.get("/edges")(get_edges)
-
-app.get("/edges/{edge_id}")(get_edge_by_id)
-
-app.post("/edge_create")(create_edge)
-

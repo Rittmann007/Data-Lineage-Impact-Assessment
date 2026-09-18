@@ -1,0 +1,123 @@
+[
+  {
+    "_id": "cust_edge_001",
+    "source": "cust_file_001",
+    "target": "cust_pipe_001",
+    "relationship_type": "feeds",
+    "confidence": "high"
+  },
+  {
+    "_id": "cust_edge_002",
+    "source": "cust_pipe_001",
+    "target": "cust_tbl_001",
+    "relationship_type": "writes_to",
+    "confidence": "high"
+  },
+  {
+    "_id": "cust_edge_003",
+    "source": "cust_pipe_002",
+    "target": "cust_tbl_001",
+    "relationship_type": "reads_from",
+    "confidence": "high"
+  },
+  {
+    "_id": "cust_edge_004",
+    "source": "cust_pipe_002",
+    "target": "cust_tbl_002",
+    "relationship_type": "writes_to",
+    "confidence": "high"
+  },
+  {
+    "_id": "cust_edge_005",
+    "source": "cust_tbl_002",
+    "target": "cust_rpt_001",
+    "relationship_type": "feeds",
+    "confidence": "high"
+  },
+  {
+    "_id": "cust_edge_006",
+    "source": "cust_tbl_001",
+    "target": "cust_rpt_001",
+    "relationship_type": "feeds",
+    "confidence": "medium"
+  },
+
+  {
+    "_id": "ord_edge_001",
+    "source": "ord_file_001",
+    "target": "ord_pipe_001",
+    "relationship_type": "feeds",
+    "confidence": "high"
+  },
+  {
+    "_id": "ord_edge_002",
+    "source": "ord_pipe_001",
+    "target": "ord_tbl_001",
+    "relationship_type": "writes_to",
+    "confidence": "high"
+  },
+  {
+    "_id": "ord_edge_003",
+    "source": "ord_pipe_002",
+    "target": "ord_tbl_001",
+    "relationship_type": "reads_from",
+    "confidence": "high"
+  },
+  {
+    "_id": "ord_edge_004",
+    "source": "ord_pipe_002",
+    "target": "ord_tbl_002",
+    "relationship_type": "writes_to",
+    "confidence": "high"
+  },
+  {
+    "_id": "ord_edge_005",
+    "source": "ord_tbl_002",
+    "target": "ord_rpt_001",
+    "relationship_type": "feeds",
+    "confidence": "high"
+  },
+  {
+    "_id": "ord_edge_006",
+    "source": "ord_tbl_001",
+    "target": "ord_rpt_001",
+    "relationship_type": "feeds",
+    "confidence": "medium"
+  },
+
+  {
+    "_id": "shd_edge_001",
+    "source": "shd_file_001",
+    "target": "cust_pipe_001",
+    "relationship_type": "feeds",
+    "confidence": "low"
+  },
+  {
+    "_id": "shd_edge_002",
+    "source": "cust_tbl_001",
+    "target": "shd_rpt_001",
+    "relationship_type": "feeds",
+    "confidence": "high"
+  },
+  {
+    "_id": "shd_edge_003",
+    "source": "ord_tbl_001",
+    "target": "shd_rpt_001",
+    "relationship_type": "feeds",
+    "confidence": "high"
+  },
+  {
+    "_id": "shd_edge_004",
+    "source": "cust_pipe_001",
+    "target": "shd_tbl_001",
+    "relationship_type": "reads_from",
+    "confidence": "medium"
+  },
+  {
+    "_id": "shd_edge_005",
+    "source": "ord_pipe_001",
+    "target": "shd_tbl_001",
+    "relationship_type": "reads_from",
+    "confidence": "medium"
+  }
+]
