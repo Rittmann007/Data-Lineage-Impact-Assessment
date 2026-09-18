@@ -100,5 +100,27 @@ def get_impact(request: Request, asset_id: str):
         "affected": affected
     }
 
+def get_graph(request: Request):
+    client = request.app.state.mongo_client
+    db = client["Data_lineage"]
+    assets_collection = db["assets"]
+    edges_collection = db["edges"]
+
+    asset_docs = list(assets_collection.find())
+    nodes = [_to_node(doc) for doc in asset_docs]
+
+    edges = []
+    for edge in edges_collection.find():
+        edges.append({
+            "id": f"{edge['source']}-{edge['target']}",
+            "source": edge["source"],
+            "target": edge["target"],
+            "label": edge.get("relationship_type", "")
+        })
+
+    return {
+        "nodes": nodes,
+        "edges": edges
+    }
 
 
