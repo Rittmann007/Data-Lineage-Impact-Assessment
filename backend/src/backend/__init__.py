@@ -5,6 +5,7 @@ from fastapi import FastAPI
 from pymongo import MongoClient
 from pymongo.server_api import ServerApi
 import os
+from backend.controllers.assets_controller import get_assets,get_asset_by_id,create_asset,delete_asset
 
 
 uri = os.environ.get("MONGO_URI")
@@ -29,3 +30,12 @@ app = FastAPI(lifespan=lifespan)
 @app.get("/")
 async def root():
     return {"message": "Hello World"}
+
+# assets
+app.get("/assets")(get_assets)
+
+app.get("/assets/{asset_id}")(get_asset_by_id)
+
+app.post("/asset_create")(create_asset)
+
+app.delete("/assets/{asset_id}")(delete_asset)

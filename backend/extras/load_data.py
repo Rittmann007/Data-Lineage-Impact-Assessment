@@ -3,7 +3,7 @@ import os
 import asyncio
 from dotenv import load_dotenv
 from motor.motor_asyncio import AsyncIOMotorClient
-from models import Asset, Edge   # full models — your data already includes _id, created_at, etc.
+from backend.models import Asset, Edge   # full models — your data already includes _id, created_at, etc.
 
 load_dotenv()
 

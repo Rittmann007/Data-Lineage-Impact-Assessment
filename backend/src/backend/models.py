@@ -1,7 +1,7 @@
 from pydantic import BaseModel, Field
 from typing import Optional
 from enum import Enum
-from datetime import datetime
+from datetime import datetime,timezone
 
 # ---------- Enums (keep values controlled) ----------
 
@@ -68,8 +68,8 @@ class AssetCreate(AssetBase):
 class Asset(AssetBase):
     """Full asset as stored/returned from MongoDB."""
     id: str = Field(alias="_id")
-    created_at: datetime = Field(default_factory=datetime.utcnow)
-    last_scanned: datetime = Field(default_factory=datetime.utcnow)
+    created_at: datetime = Field(default_factory=datetime.now(timezone.utc))
+    last_scanned: datetime = Field(default_factory=datetime.now(timezone.utc))
 
     class Config:
         populate_by_name = True
