@@ -2,6 +2,7 @@ from dotenv import load_dotenv
 load_dotenv()
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from pymongo import MongoClient
 from pymongo.server_api import ServerApi
 import os
@@ -24,6 +25,14 @@ async def lifespan(app: FastAPI):
     yield
 
 app = FastAPI(lifespan=lifespan)
+
+app.add_middleware(# adding cors middleware
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173","http://localhost:3000"],  # your React dev server URL (Vite default; use 3000 for CRA)
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 #routes
