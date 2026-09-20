@@ -9,6 +9,7 @@ import os
 from backend.controllers.assets_controller import get_assets,get_asset_by_id,create_asset,delete_asset
 from backend.controllers.edges_controller import get_edges, get_edge_by_id, create_edge
 from backend.controllers.lineage_controller import get_lineage,get_impact, get_graph
+from backend.controllers.ai_controller import get_asset_explanation
 
 
 uri = os.environ.get("MONGO_URI")
@@ -64,3 +65,6 @@ app.get("/lineage/{asset_id}")(get_lineage)
 app.get("/impact/{asset_id}")(get_impact)
 
 app.get("/graph")(get_graph)
+
+# ai
+app.get("/assets/{asset_id}/explain")(get_asset_explanation)
