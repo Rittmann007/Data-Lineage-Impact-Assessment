@@ -931,22 +931,20 @@ function Dashboard() {
         <div className="mb-3 inline-flex rounded-xl border border-white/10 bg-white/[0.06] p-1.5 shadow-xl shadow-black/10 backdrop-blur-xl">
           <button
             onClick={() => setViewMode("assets")}
-            className={`rounded-lg px-4 py-2 text-xs font-medium transition ${
-              viewMode === "assets"
+            className={`rounded-lg px-4 py-2 text-xs font-medium transition ${viewMode === "assets"
                 ? "bg-white/[0.12] text-white shadow-lg shadow-violet-500/10 ring-1 ring-violet-400/20"
                 : "text-white/45 hover:text-white/75"
-            }`}
+              }`}
           >
             Assets
           </button>
 
           <button
             onClick={() => setViewMode("relations")}
-            className={`rounded-lg px-4 py-2 text-xs font-medium transition ${
-              viewMode === "relations"
+            className={`rounded-lg px-4 py-2 text-xs font-medium transition ${viewMode === "relations"
                 ? "bg-white/[0.12] text-white shadow-lg shadow-violet-500/10 ring-1 ring-violet-400/20"
                 : "text-white/45 hover:text-white/75"
-            }`}
+              }`}
           >
             Relations
           </button>
@@ -954,278 +952,286 @@ function Dashboard() {
 
         {viewMode === "assets" ? (
           <section className="overflow-hidden rounded-2xl border border-white/15 bg-white/[0.07] shadow-2xl shadow-black/20 backdrop-blur-xl">
-            {/* Assets header */}
-            <div className="border-b border-white/10 px-4 py-3">
-              <div className="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between">
-                <div className="flex items-center gap-2">
-                  <h2 className="text-lg font-semibold">
-                    Assets
-                  </h2>
+            <div className="grid lg:grid-cols-[minmax(0,1fr)_360px]">
+              <div className="min-w-0">
+                {/* Assets header */}
+                <div className="border-b border-white/10 px-4 py-3">
+                  <div className="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between">
+                    <div className="flex items-center gap-2">
+                      <h2 className="text-lg font-semibold">
+                        Assets
+                      </h2>
 
-                  <span className="rounded-md border border-white/10 bg-white/5 px-2 py-1 text-xs text-white/60 [font-family:var(--font-mono)]">
-                    {assets.length} assets
-                  </span>
+                      <span className="rounded-md border border-white/10 bg-white/5 px-2 py-1 text-xs text-white/60 [font-family:var(--font-mono)]">
+                        {assets.length} assets
+                      </span>
 
-                  <span className="text-xs text-white/35">
-                    · Search and filter the data estate.
-                  </span>
+                      <span className="text-xs text-white/35">
+                        · Search and filter the data estate.
+                      </span>
+                    </div>
+
+                    <button
+                      onClick={() => {
+                        setError("");
+                        setShowCreateAsset(true);
+                      }}
+                      className="rounded-lg border border-violet-300/20 bg-violet-400/[0.12] px-3 py-2 text-xs font-medium text-violet-50 shadow-lg shadow-violet-500/10 transition hover:border-violet-300/30 hover:bg-violet-400/[0.18]"
+                    >
+                      + Create Asset
+                    </button>
+                  </div>
+
+                  {/* Search */}
+                  <div className="mt-3">
+                    <input
+                      type="text"
+                      placeholder="Search assets..."
+                      value={search}
+                      onChange={(e) => setSearch(e.target.value)}
+                      className="w-full rounded-lg border border-white/10 bg-black/10 px-3 py-2 text-xs text-white outline-none placeholder:text-white/30 focus:border-white/25 focus:bg-white/5"
+                    />
+                  </div>
+
+                  {/* Filters */}
+                  <div className="mt-1.5 grid grid-cols-2 gap-1.5 xl:grid-cols-4">
+                    <select
+                      value={type}
+                      onChange={(e) => setType(e.target.value)}
+                      className="rounded-lg border border-white/10 bg-[#202b3a] px-2 py-2 text-xs text-white/75 outline-none"
+                    >
+                      <option value="">All types</option>
+                      {ASSET_TYPES.map((value) => (
+                        <option key={value} value={value}>
+                          {value}
+                        </option>
+                      ))}
+                    </select>
+
+                    <select
+                      value={environment}
+                      onChange={(e) =>
+                        setEnvironment(e.target.value)
+                      }
+                      className="rounded-lg border border-white/10 bg-[#202b3a] px-2 py-2 text-xs text-white/75 outline-none"
+                    >
+                      <option value="">All environments</option>
+                      <option value="prod">Production</option>
+                      <option value="staging">Staging</option>
+                      <option value="dev">Development</option>
+                    </select>
+
+                    <select
+                      value={criticality}
+                      onChange={(e) =>
+                        setCriticality(e.target.value)
+                      }
+                      className="rounded-lg border border-white/10 bg-[#202b3a] px-2 py-2 text-xs text-white/75 outline-none"
+                    >
+                      <option value="">All criticality</option>
+                      {CRITICALITIES.map((value) => (
+                        <option key={value} value={value}>
+                          {value}
+                        </option>
+                      ))}
+                    </select>
+
+                    <input
+                      type="text"
+                      placeholder="Owner"
+                      value={owner}
+                      onChange={(e) => setOwner(e.target.value)}
+                      className="rounded-lg border border-white/10 bg-black/10 px-2 py-2 text-xs text-white outline-none placeholder:text-white/30 focus:border-white/25"
+                    />
+                  </div>
                 </div>
 
-                <button
-                  onClick={() => {
-                    setError("");
-                    setShowCreateAsset(true);
-                  }}
-                  className="rounded-lg border border-violet-300/20 bg-violet-400/[0.12] px-3 py-2 text-xs font-medium text-violet-50 shadow-lg shadow-violet-500/10 transition hover:border-violet-300/30 hover:bg-violet-400/[0.18]"
-                >
-                  + Create Asset
-                </button>
-              </div>
+                {/* Asset list */}
+                <div className="min-h-[465px] p-3">
+                  {loadingAssets ? (
+                    <div className="flex h-28 items-center justify-center text-xs text-white/40">
+                      Loading assets...
+                    </div>
+                  ) : assets.length === 0 ? (
+                    <div className="flex h-28 items-center justify-center text-xs text-white/40">
+                      No assets found.
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-1 gap-2">
+                      {assets.map((asset) => {
+                        const isSelected =
+                          selectedAsset?._id === asset._id;
 
-              {/* Asset analytics */}
-              <div className="mt-3 rounded-xl border border-white/10 bg-gradient-to-b from-white/[0.05] to-white/[0.015] p-3 shadow-inner shadow-black/20">
-                <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-white/35">
-                  Asset Analytics
-                </p>
-
-                <div className="grid grid-cols-2 divide-y divide-white/[0.06] sm:grid-cols-3 sm:divide-y-0 sm:divide-x lg:grid-cols-5">
-                  <AnalyticsStat
-                    value={assetAnalytics.total}
-                    label="assets registered"
-                  />
-                  <AnalyticsStat
-                    value={assetAnalytics.highCriticality}
-                    label="high criticality"
-                    caption={`${assetAnalytics.highCriticalityPct}% of registry`}
-                    valueClassName="text-red-300"
-                  />
-                  <AnalyticsStat
-                    value={assetAnalytics.notConnected}
-                    label="not yet connected"
-                    caption={
-                      assetAnalytics.notConnected === 0
-                        ? "everything is mapped"
-                        : "needs a relationship"
-                    }
-                  />
-                  <AnalyticsStat
-                    value={assetAnalytics.deprecatedOrRetiring}
-                    label="deprecated or retiring"
-                  />
-                  <AnalyticsStat
-                    value={assetAnalytics.distinctOwners}
-                    label="distinct owners"
-                  />
-                </div>
-
-                <div className="mt-3 grid grid-cols-1 gap-4 border-t border-white/10 pt-3 md:grid-cols-3">
-                  <BreakdownColumn
-                    title="By type"
-                    rows={assetAnalytics.byType}
-                  />
-                  <BreakdownColumn
-                    title="By environment"
-                    rows={assetAnalytics.byEnvironment}
-                  />
-                  <StatPieChart
-                    title="By criticality"
-                    rows={assetAnalytics.byCriticality}
-                    colors={PIE_COLORS}
-                    centerLabel="assets"
-                  />
-                </div>
-              </div>
-
-              {/* Search */}
-              <div className="mt-3">
-                <input
-                  type="text"
-                  placeholder="Search assets..."
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  className="w-full rounded-lg border border-white/10 bg-black/10 px-3 py-2 text-xs text-white outline-none placeholder:text-white/30 focus:border-white/25 focus:bg-white/5"
-                />
-              </div>
-
-              {/* Filters */}
-              <div className="mt-1.5 grid grid-cols-2 gap-1.5 xl:grid-cols-4">
-                <select
-                  value={type}
-                  onChange={(e) => setType(e.target.value)}
-                  className="rounded-lg border border-white/10 bg-[#202b3a] px-2 py-2 text-xs text-white/75 outline-none"
-                >
-                  <option value="">All types</option>
-                  {ASSET_TYPES.map((value) => (
-                    <option key={value} value={value}>
-                      {value}
-                    </option>
-                  ))}
-                </select>
-
-                <select
-                  value={environment}
-                  onChange={(e) =>
-                    setEnvironment(e.target.value)
-                  }
-                  className="rounded-lg border border-white/10 bg-[#202b3a] px-2 py-2 text-xs text-white/75 outline-none"
-                >
-                  <option value="">All environments</option>
-                  <option value="prod">Production</option>
-                  <option value="staging">Staging</option>
-                  <option value="dev">Development</option>
-                </select>
-
-                <select
-                  value={criticality}
-                  onChange={(e) =>
-                    setCriticality(e.target.value)
-                  }
-                  className="rounded-lg border border-white/10 bg-[#202b3a] px-2 py-2 text-xs text-white/75 outline-none"
-                >
-                  <option value="">All criticality</option>
-                  {CRITICALITIES.map((value) => (
-                    <option key={value} value={value}>
-                      {value}
-                    </option>
-                  ))}
-                </select>
-
-                <input
-                  type="text"
-                  placeholder="Owner"
-                  value={owner}
-                  onChange={(e) => setOwner(e.target.value)}
-                  className="rounded-lg border border-white/10 bg-black/10 px-2 py-2 text-xs text-white outline-none placeholder:text-white/30 focus:border-white/25"
-                />
-              </div>
-            </div>
-
-            {/* Asset list */}
-            <div className="min-h-[465px] p-3">
-              {loadingAssets ? (
-                <div className="flex h-28 items-center justify-center text-xs text-white/40">
-                  Loading assets...
-                </div>
-              ) : assets.length === 0 ? (
-                <div className="flex h-28 items-center justify-center text-xs text-white/40">
-                  No assets found.
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 gap-2">
-                  {assets.map((asset) => {
-                    const isSelected =
-                      selectedAsset?._id === asset._id;
-
-                    return (
-                      <div
-                        key={asset._id}
-                        role="button"
-                        tabIndex={0}
-                        onClick={() => handleAssetSelect(asset)}
-                        onKeyDown={(event) => {
-                          if (
-                            event.key === "Enter" ||
-                            event.key === " "
-                          ) {
-                            event.preventDefault();
-                            handleAssetSelect(asset);
-                          }
-                        }}
-                        className={`group relative flex flex-wrap cursor-pointer items-start justify-between gap-x-3 gap-y-2 overflow-hidden rounded-xl border py-2.5 pl-4 pr-2.5 text-left transition-all duration-200 ${
-                          isSelected
-                            ? "border-violet-300/30 bg-violet-400/[0.10] shadow-lg shadow-violet-500/10"
-                            : "border-white/10 bg-white/[0.045] hover:border-white/25 hover:bg-white/[0.08] hover:shadow-md hover:shadow-black/20"
-                        }`}
-                      >
-                        <span
-                          className={`absolute inset-y-0 left-0 w-1 ${
-                            CRITICALITY_ACCENT[asset.criticality]
-                          }`}
-                        />
-
-                        <div className="min-w-0 flex-1">
-                          <div className="flex items-baseline gap-2">
-                            <h3 className="truncate text-[0.9rem] font-bold text-white/95">
-                              {asset.name}
-                            </h3>
-                            <p className="truncate text-[11px] tracking-tight text-white/35 [font-family:var(--font-mono)]">
-                              {asset._id}
-                            </p>
-                          </div>
-
-                          <div className="mt-1.5 flex flex-wrap items-center gap-1">
-                            <span
-                              className={`flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[11px] [font-family:var(--font-mono)] ${
-                                TYPE_BADGE[asset.type]
+                        return (
+                          <div
+                            key={asset._id}
+                            role="button"
+                            tabIndex={0}
+                            onClick={() => handleAssetSelect(asset)}
+                            onKeyDown={(event) => {
+                              if (
+                                event.key === "Enter" ||
+                                event.key === " "
+                              ) {
+                                event.preventDefault();
+                                handleAssetSelect(asset);
+                              }
+                            }}
+                            className={`group relative flex flex-wrap cursor-pointer items-start justify-between gap-x-3 gap-y-2 overflow-hidden rounded-xl border py-2.5 pl-4 pr-2.5 text-left transition-all duration-200 ${isSelected
+                                ? "border-violet-300/30 bg-violet-400/[0.10] shadow-lg shadow-violet-500/10"
+                                : "border-white/10 bg-white/[0.045] hover:border-white/25 hover:bg-white/[0.08] hover:shadow-md hover:shadow-black/20"
                               }`}
-                            >
-                              <span
-                                className={`h-1.5 w-1.5 rounded-full ${
-                                  TYPE_DOT[asset.type]
+                          >
+                            <span
+                              className={`absolute inset-y-0 left-0 w-1 ${CRITICALITY_ACCENT[asset.criticality]
                                 }`}
-                              />
-                              {asset.type}
-                            </span>
+                            />
 
-                            <span className="rounded-md border border-white/10 bg-white/[0.04] px-1.5 py-0.5 text-[11px] text-white/55">
-                              {asset.environment}
-                            </span>
+                            <div className="min-w-0 flex-1">
+                              <div className="flex items-baseline gap-2">
+                                <h3 className="truncate text-[0.9rem] font-bold text-white/95">
+                                  {asset.name}
+                                </h3>
+                                <p className="truncate text-[11px] tracking-tight text-white/35 [font-family:var(--font-mono)]">
+                                  {asset._id}
+                                </p>
+                              </div>
 
-                            <span
-                              className={`rounded-md px-1.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide ${
-                                CRITICALITY_BADGE[asset.criticality]
-                              }`}
-                            >
-                              {asset.criticality}
-                            </span>
+                              <div className="mt-1.5 flex flex-wrap items-center gap-1">
+                                <span
+                                  className={`flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[11px] [font-family:var(--font-mono)] ${TYPE_BADGE[asset.type]
+                                    }`}
+                                >
+                                  <span
+                                    className={`h-1.5 w-1.5 rounded-full ${TYPE_DOT[asset.type]
+                                      }`}
+                                  />
+                                  {asset.type}
+                                </span>
 
-                            <span className="truncate rounded-md border border-white/10 bg-white/[0.04] px-1.5 py-0.5 text-[11px] text-white/55">
-                              {asset.owner}
-                            </span>
+                                <span className="rounded-md border border-white/10 bg-white/[0.04] px-1.5 py-0.5 text-[11px] text-white/55">
+                                  {asset.environment}
+                                </span>
+
+                                <span
+                                  className={`rounded-md px-1.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide ${CRITICALITY_BADGE[asset.criticality]
+                                    }`}
+                                >
+                                  {asset.criticality}
+                                </span>
+
+                                <span className="truncate rounded-md border border-white/10 bg-white/[0.04] px-1.5 py-0.5 text-[11px] text-white/55">
+                                  {asset.owner}
+                                </span>
+                              </div>
+                            </div>
+
+                            <div className="flex shrink-0 items-center gap-1.5 self-center">
+                              {/* Lineage button */}
+                              <button
+                                type="button"
+                                onClick={(event) =>
+                                  handleLineageClick(event, asset)
+                                }
+                                className="rounded-md border border-violet-400/25 bg-violet-400/[0.10] px-2.5 py-1.5 text-[11px] font-semibold text-violet-200 transition hover:border-violet-300/50 hover:bg-violet-400/25 hover:text-white"
+                              >
+                                Lineage
+                              </button>
+
+                              {/* Impact button */}
+                              <button
+                                type="button"
+                                onClick={(event) =>
+                                  handleImpactClick(event, asset)
+                                }
+                                className="rounded-md border border-amber-400/25 bg-amber-400/[0.10] px-2.5 py-1.5 text-[11px] font-semibold text-amber-200 transition hover:border-amber-300/50 hover:bg-amber-400/25 hover:text-white"
+                              >
+                                Impact
+                              </button>
+
+                              {/* AI overview button */}
+                              <button
+                                type="button"
+                                onClick={(event) =>
+                                  handleAIClick(event, asset)
+                                }
+                                className="flex items-center gap-1 rounded-md border border-sky-400/25 bg-sky-400/[0.10] px-2.5 py-1.5 text-[11px] font-semibold text-sky-200 transition hover:border-sky-300/50 hover:bg-sky-400/25 hover:text-white"
+                              >
+                                <span className="text-[10px]">✦</span>
+                                AI Overview
+                              </button>
+                            </div>
                           </div>
-                        </div>
-
-                        <div className="flex shrink-0 items-center gap-1.5 self-center">
-                          {/* Lineage button */}
-                          <button
-                            type="button"
-                            onClick={(event) =>
-                              handleLineageClick(event, asset)
-                            }
-                            className="rounded-md border border-violet-400/25 bg-violet-400/[0.10] px-2.5 py-1.5 text-[11px] font-semibold text-violet-200 transition hover:border-violet-300/50 hover:bg-violet-400/25 hover:text-white"
-                          >
-                            Lineage
-                          </button>
-
-                          {/* Impact button */}
-                          <button
-                            type="button"
-                            onClick={(event) =>
-                              handleImpactClick(event, asset)
-                            }
-                            className="rounded-md border border-amber-400/25 bg-amber-400/[0.10] px-2.5 py-1.5 text-[11px] font-semibold text-amber-200 transition hover:border-amber-300/50 hover:bg-amber-400/25 hover:text-white"
-                          >
-                            Impact
-                          </button>
-
-                          {/* AI overview button */}
-                          <button
-                            type="button"
-                            onClick={(event) =>
-                              handleAIClick(event, asset)
-                            }
-                            className="flex items-center gap-1 rounded-md border border-sky-400/25 bg-sky-400/[0.10] px-2.5 py-1.5 text-[11px] font-semibold text-sky-200 transition hover:border-sky-300/50 hover:bg-sky-400/25 hover:text-white"
-                          >
-                            <span className="text-[10px]">✦</span>
-                            AI Overview
-                          </button>
-                        </div>
-                      </div>
-                    );
-                  })}
+                        );
+                      })}
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
+              </div>
+                {/* Asset analytics */}
+                <aside className="border-t border-white/10 bg-black/[0.10] p-4 lg:border-l lg:border-t-0">
+                  <div className="sticky top-24">
+                    <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.2em] text-white/35">
+                      Asset Analytics
+                    </p>
+
+                    <div className="rounded-xl border border-white/10 bg-gradient-to-b from-white/[0.05] to-white/[0.015] p-3 shadow-inner shadow-black/20">
+                      <div className="grid grid-cols-2 gap-x-2 gap-y-3">
+                        <AnalyticsStat
+                          value={assetAnalytics.total}
+                          label="assets registered"
+                        />
+                        <AnalyticsStat
+                          value={assetAnalytics.highCriticality}
+                          label="high criticality"
+                          caption={`${assetAnalytics.highCriticalityPct}% of registry`}
+                          valueClassName="text-red-300"
+                        />
+                        <AnalyticsStat
+                          value={assetAnalytics.notConnected}
+                          label="not yet connected"
+                          caption={
+                            assetAnalytics.notConnected === 0
+                              ? "everything is mapped"
+                              : "needs a relationship"
+                          }
+                        />
+                        <AnalyticsStat
+                          value={assetAnalytics.deprecatedOrRetiring}
+                          label="deprecated or retiring"
+                        />
+                        <AnalyticsStat
+                          value={assetAnalytics.distinctOwners}
+                          label="distinct owners"
+                        />
+                      </div>
+
+                      <div className="mt-4 border-t border-white/10 pt-4">
+                        <BreakdownColumn
+                          title="By type"
+                          rows={assetAnalytics.byType}
+                        />
+                      </div>
+
+                      <div className="mt-4 border-t border-white/10 pt-4">
+                        <BreakdownColumn
+                          title="By environment"
+                          rows={assetAnalytics.byEnvironment}
+                        />
+                      </div>
+
+                      <div className="mt-4 border-t border-white/10 pt-4">
+                        <StatPieChart
+                          title="By criticality"
+                          rows={assetAnalytics.byCriticality}
+                          colors={PIE_COLORS}
+                          centerLabel="assets"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </aside>
+              </div>
           </section>
         ) : (
           <section className="flex min-h-[465px] flex-col overflow-hidden rounded-2xl border border-white/15 bg-white/[0.07] shadow-2xl shadow-black/20 backdrop-blur-xl">
@@ -1598,9 +1604,8 @@ function Dashboard() {
             onClick={(event) => event.stopPropagation()}
           >
             <span
-              className={`absolute inset-x-0 top-0 h-1 ${
-                CRITICALITY_ACCENT[selectedAsset.criticality] || "bg-white/20"
-              }`}
+              className={`absolute inset-x-0 top-0 h-1 ${CRITICALITY_ACCENT[selectedAsset.criticality] || "bg-white/20"
+                }`}
             />
 
             <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-violet-400/10 to-transparent" />
@@ -1614,14 +1619,12 @@ function Dashboard() {
 
                   {selectedAsset.type && (
                     <span
-                      className={`flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[10px] [font-family:var(--font-mono)] ${
-                        TYPE_BADGE[selectedAsset.type] || "text-white/55"
-                      }`}
+                      className={`flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[10px] [font-family:var(--font-mono)] ${TYPE_BADGE[selectedAsset.type] || "text-white/55"
+                        }`}
                     >
                       <span
-                        className={`h-1.5 w-1.5 rounded-full ${
-                          TYPE_DOT[selectedAsset.type] || "bg-white/50"
-                        }`}
+                        className={`h-1.5 w-1.5 rounded-full ${TYPE_DOT[selectedAsset.type] || "bg-white/50"
+                          }`}
                       />
                       {selectedAsset.type}
                     </span>
@@ -1721,9 +1724,8 @@ function Dashboard() {
 
                   {impactAsset.criticality && (
                     <span
-                      className={`rounded-md px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${
-                        CRITICALITY_BADGE[impactAsset.criticality]
-                      }`}
+                      className={`rounded-md px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${CRITICALITY_BADGE[impactAsset.criticality]
+                        }`}
                     >
                       {impactAsset.criticality}
                     </span>
@@ -1791,9 +1793,8 @@ function Dashboard() {
                       {impact.affected.map((item, index) => (
                         <div
                           key={item._id}
-                          className={`grid grid-cols-[1.6fr_0.8fr_1fr_0.7fr] items-center border-b border-white/5 px-3 py-2.5 text-xs transition last:border-b-0 hover:bg-white/[0.04] ${
-                            index % 2 === 1 ? "bg-white/[0.015]" : ""
-                          }`}
+                          className={`grid grid-cols-[1.6fr_0.8fr_1fr_0.7fr] items-center border-b border-white/5 px-3 py-2.5 text-xs transition last:border-b-0 hover:bg-white/[0.04] ${index % 2 === 1 ? "bg-white/[0.015]" : ""
+                            }`}
                         >
                           <div className="min-w-0">
                             <p className="truncate font-medium text-white/85">
@@ -1801,9 +1802,8 @@ function Dashboard() {
                             </p>
 
                             <span
-                              className={`mt-1 inline-block rounded-md px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${
-                                CRITICALITY_BADGE[item.criticality]
-                              }`}
+                              className={`mt-1 inline-block rounded-md px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${CRITICALITY_BADGE[item.criticality]
+                                }`}
                             >
                               {item.criticality}
                             </span>
@@ -1811,9 +1811,8 @@ function Dashboard() {
 
                           <span className="flex items-center gap-1.5 text-[11px] text-white/55 [font-family:var(--font-mono)]">
                             <span
-                              className={`h-1.5 w-1.5 rounded-full ${
-                                TYPE_DOT[item.type]
-                              }`}
+                              className={`h-1.5 w-1.5 rounded-full ${TYPE_DOT[item.type]
+                                }`}
                             />
                             {item.type}
                           </span>
@@ -1963,9 +1962,8 @@ function Dashboard() {
 
                   {aiAsset.criticality && (
                     <span
-                      className={`rounded-md px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${
-                        CRITICALITY_BADGE[aiAsset.criticality]
-                      }`}
+                      className={`rounded-md px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${CRITICALITY_BADGE[aiAsset.criticality]
+                        }`}
                     >
                       {aiAsset.criticality}
                     </span>
@@ -2164,7 +2162,7 @@ function ImpactStat({
 
 function AnalyticsStat({ value, label, caption, valueClassName = "text-white" }) {
   return (
-    <div className="px-3 py-2 first:pl-0">
+    <div className="min-w-0 rounded-lg border border-white/[0.06] bg-white/[0.025] px-3 py-2">
       <p
         className={`text-[1.35rem] font-semibold tabular-nums leading-none [font-family:var(--font-mono)] ${valueClassName}`}
       >
@@ -2237,7 +2235,7 @@ function StatPieChart({ title, rows, colors, centerLabel = "total" }) {
         {title}
       </p>
 
-      <div className="flex items-center gap-5">
+      <div className="flex flex-col items-center gap-3">
         <div
           className="relative shrink-0 drop-shadow-[0_6px_18px_rgba(0,0,0,0.35)]"
           style={{ width: size, height: size }}
@@ -2260,32 +2258,32 @@ function StatPieChart({ title, rows, colors, centerLabel = "total" }) {
             {total === 0
               ? null
               : visibleRows.map((row) => {
-                  const fraction = row.count / total;
-                  const dash = fraction * circumference;
-                  const offset = -cumulativeLength;
-                  cumulativeLength += dash;
+                const fraction = row.count / total;
+                const dash = fraction * circumference;
+                const offset = -cumulativeLength;
+                cumulativeLength += dash;
 
-                  return (
-                    <circle
-                      key={row.label}
-                      cx={size / 2}
-                      cy={size / 2}
-                      r={radius}
-                      fill="none"
-                      stroke={colors[row.label]}
-                      strokeWidth={strokeWidth}
-                      strokeDasharray={`${dash} ${circumference - dash}`}
-                      strokeDashoffset={offset}
-                      strokeLinecap={
-                        visibleRows.length > 1 ? "butt" : "round"
-                      }
-                      style={{
-                        filter: `drop-shadow(0 0 6px ${colors[row.label]}55)`,
-                      }}
-                      className="transition-all duration-500 ease-out"
-                    />
-                  );
-                })}
+                return (
+                  <circle
+                    key={row.label}
+                    cx={size / 2}
+                    cy={size / 2}
+                    r={radius}
+                    fill="none"
+                    stroke={colors[row.label]}
+                    strokeWidth={strokeWidth}
+                    strokeDasharray={`${dash} ${circumference - dash}`}
+                    strokeDashoffset={offset}
+                    strokeLinecap={
+                      visibleRows.length > 1 ? "butt" : "round"
+                    }
+                    style={{
+                      filter: `drop-shadow(0 0 6px ${colors[row.label]}55)`,
+                    }}
+                    className="transition-all duration-500 ease-out"
+                  />
+                );
+              })}
           </svg>
 
           <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
@@ -2298,7 +2296,7 @@ function StatPieChart({ title, rows, colors, centerLabel = "total" }) {
           </div>
         </div>
 
-        <div className="space-y-1.5">
+        <div className="w-full space-y-1.5">
           {rows.map((row) => (
             <div key={row.label} className="flex items-center gap-2">
               <span
