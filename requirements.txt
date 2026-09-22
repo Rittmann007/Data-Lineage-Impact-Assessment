@@ -1,0 +1,7 @@
+numpy==2.5.3
+optional-django==0.1.0
+pandas==3.0.6
+python-dateutil==2.9.0.post0
+six==1.17.0
+tzdata==2026.4
+uv==0.12.17
