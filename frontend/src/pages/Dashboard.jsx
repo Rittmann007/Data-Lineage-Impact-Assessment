@@ -1191,7 +1191,7 @@ function Dashboard() {
               </div>
                 {/* Asset analytics */}
                 <aside className="border-t border-white/10 bg-black/[0.10] p-4 lg:border-l lg:border-t-0">
-                  <div className="sticky top-24">
+                  <div className="sticky top-4">
                     <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.2em] text-white/35">
                       Asset Analytics
                     </p>
@@ -1257,69 +1257,24 @@ function Dashboard() {
               </div>
           </section>
         ) : (
-          <section className="flex min-h-[465px] flex-col overflow-hidden rounded-2xl border border-white/15 bg-white/[0.07] shadow-2xl shadow-black/20 backdrop-blur-xl">
-            {/* Relations header */}
-            <div className="border-b border-white/10 px-4 py-3">
-              <div className="flex items-center gap-2">
-                <h2 className="text-lg font-semibold">
-                  Relations
-                </h2>
+          <section className="overflow-hidden rounded-2xl border border-white/15 bg-white/[0.07] shadow-2xl shadow-black/20 backdrop-blur-xl">
+            <div className="grid lg:grid-cols-[minmax(0,1fr)_360px]">
+              <div className="flex min-h-[465px] min-w-0 flex-col">
+              {/* Relations header */}
+              <div className="border-b border-white/10 px-4 py-3">
+                <div className="flex items-center gap-2">
+                  <h2 className="text-lg font-semibold">
+                    Relations
+                  </h2>
 
-                <span className="rounded-md border border-white/10 bg-white/5 px-2 py-1 text-xs text-white/60 [font-family:var(--font-mono)]">
-                  {displayedRelations.length} relations
-                </span>
+                  <span className="rounded-md border border-white/10 bg-white/5 px-2 py-1 text-xs text-white/60 [font-family:var(--font-mono)]">
+                    {displayedRelations.length} relations
+                  </span>
 
-                <span className="text-xs text-white/35">
-                  · View and filter existing connections between assets.
-                </span>
-              </div>
-
-              {/* Edge analytics */}
-              <div className="mt-3 rounded-xl border border-white/10 bg-gradient-to-b from-white/[0.05] to-white/[0.015] p-3 shadow-inner shadow-black/20">
-                <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-white/35">
-                  Edge Analytics
-                </p>
-
-                <div className="grid grid-cols-2 divide-y divide-white/[0.06] sm:grid-cols-3 sm:divide-y-0 sm:divide-x lg:grid-cols-5">
-                  <AnalyticsStat
-                    value={edgeAnalytics.total}
-                    label="relationships mapped"
-                  />
-                  <AnalyticsStat
-                    value={edgeAnalytics.highConfidence}
-                    label="high confidence"
-                    caption={`${edgeAnalytics.highConfidencePct}% of edges`}
-                    valueClassName="text-green-300"
-                  />
-                  <AnalyticsStat
-                    value={edgeAnalytics.avgPerAsset}
-                    label="avg edges per asset"
-                  />
-                  <AnalyticsStat
-                    value={edgeAnalytics.connectedCount}
-                    label="assets connected"
-                    caption={`of ${assetAnalytics.total} registered`}
-                  />
-                  <AnalyticsStat
-                    value={edgeAnalytics.mostConnectedDegree}
-                    label="most connected"
-                    caption={edgeAnalytics.mostConnectedName}
-                  />
+                  <span className="text-xs text-white/35">
+                    · View and filter existing connections between assets.
+                  </span>
                 </div>
-
-                <div className="mt-3 grid grid-cols-1 gap-4 border-t border-white/10 pt-3 md:grid-cols-2">
-                  <BreakdownColumn
-                    title="By relationship type"
-                    rows={edgeAnalytics.byRelationshipType}
-                  />
-                  <StatPieChart
-                    title="By confidence"
-                    rows={edgeAnalytics.byConfidence}
-                    colors={CONFIDENCE_PIE_COLORS}
-                    centerLabel="edges"
-                  />
-                </div>
-              </div>
 
               <div className="mt-3">
                 <input
@@ -1404,10 +1359,10 @@ function Dashboard() {
                   ))}
                 </select>
               </div>
-            </div>
+              </div>
 
-            {/* Relation list */}
-            <div className="flex-1 overflow-y-auto p-3">
+              {/* Relation list */}
+              <div className="flex-1 overflow-y-auto p-3">
               <div className="mx-auto w-full max-w-4xl">
                 {loadingEdges ? (
                   <div className="flex h-28 items-center justify-center text-xs text-white/40">
@@ -1478,6 +1433,64 @@ function Dashboard() {
                   </div>
                 )}
               </div>
+              </div>
+              </div>
+
+              {/* Edge analytics */}
+              <aside className="border-t border-white/10 bg-black/[0.10] p-4 lg:border-l lg:border-t-0">
+                <div className="sticky top-4">
+                  <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.2em] text-white/35">
+                    Edge Analytics
+                  </p>
+
+                  <div className="rounded-xl border border-white/10 bg-gradient-to-b from-white/[0.05] to-white/[0.015] p-3 shadow-inner shadow-black/20">
+                    <div className="-mt-2">
+                      <StatPieChart
+                        title="By confidence"
+                        rows={edgeAnalytics.byConfidence}
+                        colors={CONFIDENCE_PIE_COLORS}
+                        centerLabel="edges"
+                      />
+                    </div>
+
+                    <div className="mt-4 border-t border-white/10 pt-4">
+                    <div className="grid grid-cols-2 gap-x-2 gap-y-3">
+                      <AnalyticsStat
+                        value={edgeAnalytics.total}
+                        label="relationships mapped"
+                      />
+                      <AnalyticsStat
+                        value={edgeAnalytics.highConfidence}
+                        label="high confidence"
+                        caption={`${edgeAnalytics.highConfidencePct}% of edges`}
+                        valueClassName="text-green-300"
+                      />
+                      <AnalyticsStat
+                        value={edgeAnalytics.avgPerAsset}
+                        label="avg edges per asset"
+                      />
+                      <AnalyticsStat
+                        value={edgeAnalytics.connectedCount}
+                        label="assets connected"
+                        caption={`of ${assetAnalytics.total} registered`}
+                      />
+                      <AnalyticsStat
+                        value={edgeAnalytics.mostConnectedDegree}
+                        label="most connected"
+                        caption={edgeAnalytics.mostConnectedName}
+                      />
+                    </div>
+                    </div>
+
+                    <div className="mt-4 border-t border-white/10 pt-4">
+                      <BreakdownColumn
+                        title="By relationship type"
+                        rows={edgeAnalytics.byRelationshipType}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </aside>
             </div>
           </section>
         )}
