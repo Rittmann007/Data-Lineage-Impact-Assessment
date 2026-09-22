@@ -160,4 +160,4 @@ The app will be available at `http://localhost:5173`. Optionally set `VITE_API_U
 
 ## License
 
-Add a license here if you plan to make this public beyond the hackathon.
+GNU AFFERO GENERAL PUBLIC LICENSE v3
