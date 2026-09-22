@@ -158,7 +158,7 @@ function useForceLayout(assets, edges, radiusFor) {
   useEffect(() => {
     let frame;
     let iterations = 0;
-    const MAX_ITER = 320;
+    const MAX_ITER = 480;
     runningRef.current = true;
 
     function step() {
@@ -188,8 +188,11 @@ function useForceLayout(assets, edges, radiusFor) {
         if (pinnedRef.current[a] && a !== activeDragRef.current) {
           const anchor = anchorRef.current[a];
           if (anchor) {
-            fx += (anchor.x - pos[a].x) * 0.06;
-            fy += (anchor.y - pos[a].y) * 0.06;
+            // Weaker pull than before (was 0.06) so the initial
+            // jumbled-to-organized settle-in reads as a slower, more
+            // deliberate animation instead of snapping into place quickly.
+            fx += (anchor.x - pos[a].x) * 0.02;
+            fy += (anchor.y - pos[a].y) * 0.02;
           }
         } else if (!pinnedRef.current[a]) {
           fx += (CENTER_X - pos[a].x) * 0.004;
@@ -697,10 +700,10 @@ export default function LineagePage() {
 
   return (
     <div className="min-h-screen bg-[#0d1726] text-white">
-      <main className="relative z-10 mx-auto max-w-[1125px] px-4 pb-9 pt-32">
+      <main className="relative z-10 mx-auto max-w-[1280px] px-4 pb-9 pt-32">
         <div className="mb-4 flex items-start justify-between gap-3">
           <div>
-            <h1 className="text-lg font-semibold text-white/90">Lineage graph</h1>
+            <h1 className="text-[1.7rem] font-extrabold leading-[1.05] tracking-tight text-white">Lineage graph</h1>
             <p className="mt-1 text-xs text-white/45">
               How data flows between assets — trace what feeds what before you change or retire something.
             </p>
