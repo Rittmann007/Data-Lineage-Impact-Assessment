@@ -168,7 +168,6 @@ function Dashboard() {
   const [search, setSearch] = useState("");
   const [type, setType] = useState("");
   const [environment, setEnvironment] = useState("");
-  const [owner, setOwner] = useState("");
   const [criticality, setCriticality] = useState("");
 
   // Relation filters
@@ -219,7 +218,6 @@ function Dashboard() {
         search,
         type,
         environment,
-        owner,
         criticality,
       });
 
@@ -275,7 +273,7 @@ function Dashboard() {
     }, 300);
 
     return () => clearTimeout(timer);
-  }, [search, type, environment, owner, criticality]);
+  }, [search, type, environment, criticality]);
 
   // --------------------------------------------------
   // Modal / Escape handling
@@ -849,7 +847,7 @@ function Dashboard() {
   }, [assets, edges]);
 
   const edgeAnalytics = useMemo(() => {
-    const total = edges.length;
+    const total = displayedRelations.length;
 
     const byRelationshipType = [
       "reads_from",
@@ -858,12 +856,13 @@ function Dashboard() {
       "depends_on",
     ].map((label) => ({
       label,
-      count: edges.filter((e) => e.relationship_type === label).length,
+      count: displayedRelations.filter((e) => e.relationship_type === label)
+        .length,
     }));
 
     const byConfidence = ["high", "medium", "low"].map((label) => ({
       label,
-      count: edges.filter((e) => e.confidence === label).length,
+      count: displayedRelations.filter((e) => e.confidence === label).length,
       colorClassName: CONFIDENCE_BAR_COLOR[label],
     }));
 
@@ -872,7 +871,7 @@ function Dashboard() {
 
     const degree = {};
     const connectedIds = new Set();
-    edges.forEach((e) => {
+    displayedRelations.forEach((e) => {
       degree[e.source] = (degree[e.source] || 0) + 1;
       degree[e.target] = (degree[e.target] || 0) + 1;
       connectedIds.add(e.source);
@@ -905,7 +904,7 @@ function Dashboard() {
         : "—",
       mostConnectedDegree,
     };
-  }, [edges, allAssets, allAssetMap]);
+  }, [displayedRelations, allAssets, allAssetMap]);
 
   return (
     <div className="min-h-screen bg-[#0d1726] text-white">
@@ -1015,7 +1014,7 @@ function Dashboard() {
                   </div>
 
                   {/* Filters */}
-                  <div className="mt-1.5 grid grid-cols-2 gap-1.5 xl:grid-cols-4">
+                  <div className="mt-1.5 grid grid-cols-3 gap-1.5">
                     <select
                       value={type}
                       onChange={(e) => setType(e.target.value)}
@@ -1056,14 +1055,6 @@ function Dashboard() {
                         </option>
                       ))}
                     </select>
-
-                    <input
-                      type="text"
-                      placeholder="Owner"
-                      value={owner}
-                      onChange={(e) => setOwner(e.target.value)}
-                      className="rounded-lg border border-white/10 bg-black/10 px-2 py-2 text-xs text-white outline-none placeholder:text-white/30 focus:border-white/25"
-                    />
                   </div>
                 </div>
 
