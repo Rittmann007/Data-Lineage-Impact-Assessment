@@ -1,5 +1,5 @@
 import { useState } from "react";
-import backgroundImage from "../assets/homepage-bg-2.avif";
+import backgroundImage from "../assets/bg.png";
 
 const features = [
   {
