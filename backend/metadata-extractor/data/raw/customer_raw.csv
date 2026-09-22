@@ -1,0 +1,15 @@
+# METADATA-BEGIN
+# name: customer_raw
+# type: File
+# environment: prod
+# owner: customer-data-team
+# criticality: high
+# sensitivity: pii
+# lifecycle: active
+# modernization_status: retain
+# created_at: 2026-08-01T09:00:00Z
+# LINEAGE: [{"target":"cust_pipe_001","relationship_type":"feeds"}]
+# METADATA-END
+customer_id,name,email
+1,Alice,alice@example.com
+2,Bob,bob@example.com

@@ -1,0 +1,84 @@
+{
+  "asset_count": 15,
+  "reference_files": [
+    "reference_assets_schema.json",
+    "reference_edges.json"
+  ],
+  "artifacts": [
+    {
+      "_id": "cust_file_001",
+      "file": "customer_raw.csv",
+      "type": "File"
+    },
+    {
+      "_id": "cust_pipe_001",
+      "file": "customer_cleaning_etl.py",
+      "type": "Pipeline"
+    },
+    {
+      "_id": "cust_tbl_001",
+      "file": "customer_warehouse.sqlite",
+      "type": "Table"
+    },
+    {
+      "_id": "cust_pipe_002",
+      "file": "customer_scoring_pipeline.py",
+      "type": "Pipeline"
+    },
+    {
+      "_id": "cust_tbl_002",
+      "file": "customer_churn_scores.sqlite",
+      "type": "Table"
+    },
+    {
+      "_id": "cust_rpt_001",
+      "file": "churn_risk_dashboard.html",
+      "type": "Report"
+    },
+    {
+      "_id": "ord_file_001",
+      "file": "orders_raw.csv",
+      "type": "File"
+    },
+    {
+      "_id": "ord_pipe_001",
+      "file": "orders_aggregation_pipeline.py",
+      "type": "Pipeline"
+    },
+    {
+      "_id": "ord_tbl_001",
+      "file": "orders_warehouse.sqlite",
+      "type": "Table"
+    },
+    {
+      "_id": "ord_pipe_002",
+      "file": "orders_enrichment_pipeline.py",
+      "type": "Pipeline"
+    },
+    {
+      "_id": "ord_tbl_002",
+      "file": "orders_product_summary.sqlite",
+      "type": "Table"
+    },
+    {
+      "_id": "ord_rpt_001",
+      "file": "quarterly_sales_dashboard.html",
+      "type": "Report"
+    },
+    {
+      "_id": "shd_file_001",
+      "file": "legacy_customer_export.csv",
+      "type": "File"
+    },
+    {
+      "_id": "shd_tbl_001",
+      "file": "shared_customer_id_mapping.sqlite",
+      "type": "Table"
+    },
+    {
+      "_id": "shd_rpt_001",
+      "file": "combined_revenue_dashboard.html",
+      "type": "Report"
+    }
+  ]
+}
