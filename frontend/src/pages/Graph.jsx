@@ -113,7 +113,16 @@ function useForceLayout(assets, edges, radiusFor) {
       const { pos, vel } = typeRowPositions(assets);
       missing.forEach((id) => {
         if (!pos[id]) return;
-        posRef.current[id] = pos[id];
+        // Start scattered at a random point on the canvas rather than
+        // directly at the target row position — the spring-to-anchor
+        // force below (pinned nodes pull toward `anchorRef`) then animates
+        // each node from its random start into its proper row on load,
+        // giving a "jumbled → organized" settle-in effect for free from
+        // the existing physics, instead of snapping straight into place.
+        posRef.current[id] = {
+          x: 100 + Math.random() * (WIDTH - 200),
+          y: 100 + Math.random() * (HEIGHT - 200),
+        };
         velRef.current[id] = vel[id];
         // Pinned by default so the row layout holds — center-pull and edge-spring
         // forces only ever apply to un-pinned nodes, so this keeps assets in their
@@ -517,9 +526,15 @@ export function LineageGraph({ assets, edges, colorFor, selectedId, onSelect }) 
             if (!s || !t) return null;
 
             const touchesFocus = e.source === focusId || e.target === focusId;
+            // Direct edges are now colored by direction too, matching the
+            // indirect chain convention: blue = upstream (what focus depends
+            // on), red = downstream (what depends on focus) — just solid
+            // instead of dashed, since these are one hop away, not a chain.
+            const isDirectUpstream = touchesFocus && e.target === focusId;
+            const isDirectDownstream = touchesFocus && e.source === focusId;
             // an edge counts as part of the dependent/dependency CHAIN when both
             // its ends sit within the reachable set, but it isn't the direct
-            // edge off the focused node (that one keeps the plain blue highlight)
+            // edge off the focused node (that one keeps its own solid highlight)
             const isDependentChain =
               !touchesFocus && downstreamReachable && downstreamReachable.has(e.source) && downstreamReachable.has(e.target);
             const isDependencyChain =
@@ -544,10 +559,16 @@ export function LineageGraph({ assets, edges, colorFor, selectedId, onSelect }) 
             let strokeWidth = 1.2;
             let dash = undefined;
             let opacity = dim ? 0.18 : 0.85;
-            if (active) {
-              stroke = THEME.wire;
-              marker = "url(#arrow-active)";
-              strokeWidth = 2;
+            if (isDirectUpstream) {
+              stroke = THEME.dependency;
+              marker = "url(#arrow-dependency)";
+              strokeWidth = 2.2;
+              opacity = 0.95;
+            } else if (isDirectDownstream) {
+              stroke = THEME.dependent;
+              marker = "url(#arrow-dependent)";
+              strokeWidth = 2.2;
+              opacity = 0.95;
             } else if (isDependentChain) {
               stroke = THEME.dependent;
               marker = "url(#arrow-dependent)";
@@ -700,7 +721,7 @@ export default function LineagePage() {
         )}
 
         <div className="rounded-2xl border border-white/10 bg-[#172235]/60 p-3 backdrop-blur-2xl">
-          <div className="mb-2 flex items-center justify-between">
+          <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
             <div className="flex items-center gap-3 text-xs text-white/55">
               <span className="flex items-center gap-1.5">
                 <span className="h-2 w-2 rounded-full" style={{ background: CRIT_COLOR.high }} />
@@ -719,6 +740,43 @@ export default function LineagePage() {
               {assets.length} assets · {edges.length} relationships
             </span>
           </div>
+
+          <div className="mb-3 flex flex-wrap items-center gap-x-4 gap-y-1.5 border-t border-white/10 pt-2 text-[11px] text-white/55">
+            <span className="flex items-center gap-1.5">
+              <svg width="22" height="8" className="shrink-0">
+                <line x1="1" y1="4" x2="21" y2="4" stroke={THEME.dependency} strokeWidth="2" />
+              </svg>
+              Direct upstream
+            </span>
+            <span className="flex items-center gap-1.5">
+              <svg width="22" height="8" className="shrink-0">
+                <line x1="1" y1="4" x2="21" y2="4" stroke={THEME.dependent} strokeWidth="2" />
+              </svg>
+              Direct downstream
+            </span>
+            <span className="flex items-center gap-1.5">
+              <svg width="22" height="8" className="shrink-0">
+                <line x1="1" y1="4" x2="21" y2="4" stroke={THEME.dependency} strokeWidth="2" strokeDasharray="4 3" />
+              </svg>
+              Indirect upstream
+            </span>
+            <span className="flex items-center gap-1.5">
+              <svg width="22" height="8" className="shrink-0">
+                <line x1="1" y1="4" x2="21" y2="4" stroke={THEME.dependent} strokeWidth="2" strokeDasharray="4 3" />
+              </svg>
+              Indirect downstream
+            </span>
+          </div>
+
+          <p className="mb-2 text-[11px] leading-relaxed text-white/35">
+            Hover or select an asset to trace its lineage.{" "}
+            <span style={{ color: THEME.dependency }}>Blue</span> lines show what
+            it depends on (upstream) — change those and this asset may break.{" "}
+            <span style={{ color: THEME.dependent }}>Red</span> lines show what
+            depends on it (downstream) — change this asset and those may break.
+            Solid means a direct, one-hop connection; dotted means it's reached
+            through a longer chain.
+          </p>
 
           <div className="flex gap-3">
             <div className="min-w-0 flex-1 overflow-hidden rounded-xl border border-white/10 bg-[#0d1726]">
