@@ -775,6 +775,27 @@ function Dashboard() {
     low: "bg-white/20",
   };
 
+  const CONFIDENCE_RELATION_STYLE = {
+    high: {
+      border: "border-green-400/25",
+      background: "bg-green-400/[0.045]",
+      badge: "border border-green-400/25 bg-green-400/10 text-green-200",
+      line: "bg-green-400/55",
+    },
+    medium: {
+      border: "border-amber-400/25",
+      background: "bg-amber-400/[0.045]",
+      badge: "border border-amber-400/25 bg-amber-400/10 text-amber-200",
+      line: "bg-amber-400/55",
+    },
+    low: {
+      border: "border-white/15",
+      background: "bg-white/[0.035]",
+      badge: "border border-white/15 bg-white/[0.07] text-white/65",
+      line: "bg-white/30",
+    },
+  };
+
   const assetAnalytics = useMemo(() => {
     const total = assets.length;
 
@@ -1176,7 +1197,17 @@ function Dashboard() {
                     </p>
 
                     <div className="rounded-xl border border-white/10 bg-gradient-to-b from-white/[0.05] to-white/[0.015] p-3 shadow-inner shadow-black/20">
-                      <div className="grid grid-cols-2 gap-x-2 gap-y-3">
+                      <div className="-mt-2">
+                        <StatPieChart
+                          title="By criticality"
+                          rows={assetAnalytics.byCriticality}
+                          colors={PIE_COLORS}
+                          centerLabel="assets"
+                        />
+                      </div>
+
+                      <div className="mt-4 border-t border-white/10 pt-4">
+                        <div className="grid grid-cols-2 gap-x-2 gap-y-3">
                         <AnalyticsStat
                           value={assetAnalytics.total}
                           label="assets registered"
@@ -1204,6 +1235,7 @@ function Dashboard() {
                           value={assetAnalytics.distinctOwners}
                           label="distinct owners"
                         />
+                        </div>
                       </div>
 
                       <div className="mt-4 border-t border-white/10 pt-4">
@@ -1217,15 +1249,6 @@ function Dashboard() {
                         <BreakdownColumn
                           title="By environment"
                           rows={assetAnalytics.byEnvironment}
-                        />
-                      </div>
-
-                      <div className="mt-4 border-t border-white/10 pt-4">
-                        <StatPieChart
-                          title="By criticality"
-                          rows={assetAnalytics.byCriticality}
-                          colors={PIE_COLORS}
-                          centerLabel="assets"
                         />
                       </div>
                     </div>
@@ -1396,44 +1419,62 @@ function Dashboard() {
                   </div>
                 ) : (
                   <div className="space-y-2">
-                    {displayedRelations.map((edge) => (
-                      <div
-                        key={edge._id}
-                        className="rounded-xl border border-white/10 bg-white/[0.055] p-2 transition-all duration-200 hover:border-white/20 hover:bg-white/[0.09]"
-                      >
-                        <div className="flex items-center gap-2">
-                          <div className="min-w-0 flex-1 rounded-lg border border-white/10 bg-black/10 px-3 py-1.5">
-                            <p className="truncate text-xs font-medium text-white/90">
-                              {edge.sourceName}
-                            </p>
-                            <p className="mt-1 text-[11px] uppercase tracking-[0.16em] text-white/30">
-                              Source
-                            </p>
-                          </div>
+                    {displayedRelations.map((edge) => {
+                      const confidenceStyle =
+                        CONFIDENCE_RELATION_STYLE[edge.confidence] ||
+                        CONFIDENCE_RELATION_STYLE.low;
 
-                          <div className="flex w-20 shrink-0 flex-col items-center justify-center gap-1">
-                            <span className="max-w-full truncate rounded-md bg-blue-400/10 px-1.5 py-1 text-[12px] font-medium text-blue-100/80">
-                              {edge.relationship_type}
-                            </span>
-                            <span className="text-base leading-none text-white/35">
-                              →
-                            </span>
-                            <span className="text-[11px] text-white/35">
-                              {edge.confidence} confidence
-                            </span>
-                          </div>
+                      return (
+                        <div
+                          key={edge._id}
+                          className={`rounded-xl border ${confidenceStyle.border} ${confidenceStyle.background} p-2 transition-all duration-200 hover:border-white/25 hover:bg-white/[0.08]`}
+                        >
+                          <div className="flex items-center gap-2">
+                            <div className="min-w-0 flex-1 rounded-lg border border-white/10 bg-black/10 px-3 py-1.5">
+                              <p className="truncate text-xs font-medium text-white/90">
+                                {edge.sourceName}
+                              </p>
+                              <p className="mt-1 text-[11px] uppercase tracking-[0.16em] text-white/30">
+                                Source
+                              </p>
+                            </div>
 
-                          <div className="min-w-0 flex-1 rounded-lg border border-white/10 bg-black/10 px-3 py-1.5 text-right">
-                            <p className="truncate text-xs font-medium text-white/90">
-                              {edge.targetName}
-                            </p>
-                            <p className="mt-1 text-[11px] uppercase tracking-[0.16em] text-white/30">
-                              Target
-                            </p>
+                            <div className="flex w-32 shrink-0 flex-col items-center justify-center gap-1.5">
+                              <span className="max-w-full truncate rounded-md bg-blue-400/10 px-2 py-1 text-[12px] font-medium text-blue-100/80">
+                                {edge.relationship_type}
+                              </span>
+
+                              <div className="flex w-full items-center justify-center gap-2">
+                                <span
+                                  className={`h-px flex-1 ${confidenceStyle.line}`}
+                                />
+                                <span className="shrink-0 text-base leading-none text-white/40">
+                                  →
+                                </span>
+                                <span
+                                  className={`h-px flex-1 ${confidenceStyle.line}`}
+                                />
+                              </div>
+
+                              <span
+                                className={`whitespace-nowrap rounded-md px-2 py-1 text-[11px] font-medium ${confidenceStyle.badge}`}
+                              >
+                                {edge.confidence} confidence
+                              </span>
+                            </div>
+
+                            <div className="min-w-0 flex-1 rounded-lg border border-white/10 bg-black/10 px-3 py-1.5 text-right">
+                              <p className="truncate text-xs font-medium text-white/90">
+                                {edge.targetName}
+                              </p>
+                              <p className="mt-1 text-[11px] uppercase tracking-[0.16em] text-white/30">
+                                Target
+                              </p>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 )}
               </div>
