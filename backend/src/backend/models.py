@@ -67,7 +67,7 @@ class AssetCreate(AssetBase):
 
 class Asset(AssetBase):
     """Full asset as stored/returned from MongoDB."""
-    id: str = Field(alias="_id")
+    id: str = Field(alias="_id") # these 3 returned from mongo, needs validation
     created_at: datetime = Field(default_factory=datetime.now(timezone.utc))
     last_scanned: datetime = Field(default_factory=datetime.now(timezone.utc))
 
