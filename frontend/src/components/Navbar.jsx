@@ -40,35 +40,36 @@ function Navbar() {
   ];
 
   return (
-    <nav className="fixed left-1/2 top-3 z-50 flex w-[92%] max-w-6xl -translate-x-1/2 items-center justify-between rounded-xl border border-white/20 bg-black/20 px-4 py-2 backdrop-blur-xl shadow-lg shadow-black/10">
+    <nav className="fixed left-0 right-0 top-3 z-50 mx-auto max-w-[1280px] px-4">
+      <div className="flex items-center justify-between rounded-xl border border-white/20 bg-black/20 px-4 py-2 shadow-lg shadow-black/10 backdrop-blur-xl">
+        {/* Logo / Home */}
+        <Link
+          to="/"
+          className="text-[15px] font-semibold tracking-wide text-white transition-opacity hover:opacity-80"
+        >
+          DataLineage
+        </Link>
 
-      {/* Logo / Home */}
-      <Link
-        to="/"
-        className="text-[15px] font-semibold tracking-wide text-white transition-opacity hover:opacity-80"
-      >
-        DataLineage
-      </Link>
+        {/* Navigation */}
+        <div className="flex items-center gap-1.5">
+          {navItems.map((item) => {
+            const isActive = location.pathname === item.path;
 
-      {/* Navigation */}
-      <div className="flex items-center gap-1.5">
-        {navItems.map((item) => {
-          const isActive = location.pathname === item.path;
-
-          return (
-            <Link
-              key={item.path}
-              to={item.path}
-              className={`rounded-lg border px-4 py-1.5 text-[13px] font-medium transition-all duration-300 ${
-                isActive
-                  ? "border-white/30 bg-white/20 text-white shadow-md backdrop-blur-md"
-                  : "border-transparent bg-white/5 text-white/80 hover:border-white/20 hover:bg-white/10 hover:text-white"
-              }`}
-            >
-              {item.name}
-            </Link>
-          );
-        })}
+            return (
+              <Link
+                key={item.path}
+                to={item.path}
+                className={`rounded-lg border px-4 py-1.5 text-[13px] font-medium transition-all duration-300 ${
+                  isActive
+                    ? "border-white/30 bg-white/20 text-white shadow-md backdrop-blur-md"
+                    : "border-transparent bg-white/5 text-white/80 hover:border-white/20 hover:bg-white/10 hover:text-white"
+                }`}
+              >
+                {item.name}
+              </Link>
+            );
+          })}
+        </div>
       </div>
     </nav>
   );
