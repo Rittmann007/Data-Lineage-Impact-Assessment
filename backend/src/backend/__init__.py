@@ -29,7 +29,7 @@ app = FastAPI(lifespan=lifespan)
 
 app.add_middleware(# adding cors middleware
     CORSMiddleware,
-    allow_origins=["http://localhost:5173","http://localhost:3000"],  # your React dev server URL (Vite default; use 3000 for CRA)
+    allow_origins=["http://localhost:5173","http://localhost:3000","https://data-lineage-impact-assessment.vercel.app"],  # your React dev server URL (Vite default; use 3000 for CRA)
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
